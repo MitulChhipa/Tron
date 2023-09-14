@@ -9,26 +9,26 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI redScore;
     [SerializeField] private TextMeshProUGUI blueScore;
     [SerializeField] private GameObject powerCube;
-    [SerializeField] private GameObject BlueWonPanel;
-    [SerializeField] private GameObject RedWonPanel;
-    [SerializeField] private GameObject DrawPanel;
+    [SerializeField] private GameObject eventDisplayPanel;
+    [SerializeField] private TextMeshProUGUI eventDisplayText;
     private int playerScore;
     private int enemyScore;
+    private float timer;
 
     private void Start()
     {
         redScore.text = enemyScore.ToString();
         blueScore.text = playerScore.ToString();
-        BlueWonPanel.SetActive(false);
-        RedWonPanel.SetActive(false);
-        DrawPanel.SetActive(false);
+        eventDisplayPanel.SetActive(false);
         Time.timeScale = 1f;
     }
 
     private void FixedUpdate()
     {
-        if(Time.time%10==0 && Time.time!=0)
+        timer = timer + Time.deltaTime;
+        if(timer>=10f)
         {
+            timer = 0f;
             CreatePowerUp();
         }
     }
@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
         playerScore = playerScore + x;
         blueScore.text = playerScore.ToString();
     }
+
     public void enemyScoreUpdate(int x)
     {
         enemyScore = enemyScore + x;
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour
             draw();
         }
     }
+
     private void CreatePowerUp()
     {
         Vector3 newCor = new Vector3(Random.Range(-130.0f,130.0f),Random.Range(-70.0f,70.0f),0);
@@ -72,17 +74,25 @@ public class GameManager : MonoBehaviour
 
     public void redWon()
     {
-        RedWonPanel.SetActive(true);
+        eventDisplayPanel.SetActive(true);
+        eventDisplayText.text = "Yellow Won";
+        eventDisplayText.color = Color.yellow;
         Time.timeScale = 0f;
     }
+
     public void blueWon()
     {
-        BlueWonPanel.SetActive(true);
+        eventDisplayPanel.SetActive(true);
+        eventDisplayText.text = "Blue Won";
+        eventDisplayText.color = Color.blue;
         Time.timeScale = 0f;
     }
+
     public void draw() 
     {
-        DrawPanel.SetActive(true);
+        eventDisplayPanel.SetActive(true);
+        eventDisplayText.text = "Its a draw";
+        eventDisplayText.color = Color.white;
         Time.timeScale = 0f;
     }
 }
